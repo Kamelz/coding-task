@@ -9,15 +9,7 @@ use Src\DB;
  *
  * @package Src\Models
  */
-class CoachStudent
+class CoachStudent extends BaseModel
 {
     const TABLE = 'coaches_students';
-
-    /**
-     *
-     */
-    public static function emptyTable(){
-        DB::truncate(self::TABLE);
-    }
-
 }

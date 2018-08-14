@@ -38,10 +38,8 @@ class Factory
         switch ($table) {
             case "students":
                 return new Student();
-                break;
             case "coaches":
                 return new Coach();
-                break;
             default:
                 return null;
         }

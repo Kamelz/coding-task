@@ -5,7 +5,7 @@ use Src\DB;
 /**
  * Class Student
  */
-class Student
+class Student extends BaseModel
 {
     const TABLE = "students";
 
@@ -15,34 +15,13 @@ class Student
     /** @var $name */
     public $name;
 
-    /** @var $db */
-    public $db;
-
-    public function __construct()
-    {
-        $this->db = DB::getInstance();
-    }
-
     /**
      * @return $this
      */
     public function save(){
-        $this->db->insert('students',['name' => $this->name]);
+        $this->db->insert(self::TABLE,['name' => $this->name]);
         $this->id = $this->getLastInsertedId();
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastInsertedId(){
-        return $this->db->connection->lastInsertId();
-    }
-    /**
-     *
-     */
-    public static function emptyTable(){
-        DB::truncate(self::TABLE);
     }
 }

@@ -7,7 +7,7 @@ use Src\DB;
  *
  * @property \Src\DB db
  */
-class Coach
+class Coach extends BaseModel
 {
     const TABLE = "coaches";
 
@@ -18,15 +18,7 @@ class Coach
     public $name;
 
     /** @var $capacity */
-    public $capacity;
-
-    /** @var $db */
-    public $db;
-
-    public function __construct()
-    {
-        $this->db = DB::getInstance();
-    }
+    public $capacity = 0;
 
     /**
      * @return $this
@@ -40,23 +32,6 @@ class Coach
         $this->id = $this->getLastInsertedId();
 
         return $this;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getLastInsertedId()
-    {
-        return $this->db->connection->lastInsertId();
-    }
-
-    /**
-     *
-     */
-    public static function emptyTable()
-    {
-        DB::truncate(self::TABLE);
     }
 
     /**
@@ -80,7 +55,6 @@ class Coach
     {
         $result = $this->db->connection->query('select * from `coaches` where 1');
         $coaches = $result->fetchAll();
-
 
         $result = $this->db->connection->query('select * from `students` where 1');
         $students = $result->fetchAll();
@@ -110,18 +84,16 @@ class Coach
      */
     private function getShare($coaches, $students)
     {
-
-        // check if coach already has students
-        //todo
+        $oldShare = $this->getOldShare($coaches);
 
         $coachesCount = count($coaches);
         $share = [];
         // get the share of each coach
         for ($i = 0; $i < $coachesCount; $i++) {
             $share[$i]['coach_id'] = $coaches[$i]['id'];
-            $share[$i]['shareCount'] = floor((count($students) + $coachesCount - ($i + 1)) / $coachesCount);
+            $shareCount = abs(floor((count($students) + $coachesCount - ($i + 1)) / $coachesCount) - $oldShare[$i]['old_share']);
+            $share[$i]['shareCount'] = $shareCount;
         }
-
         return $share;
     }
 
@@ -140,6 +112,25 @@ class Coach
             $share[$i]['shareCount'] = $coaches[$i]['capacity'] * count($students) / 100;
         }
 
+        return $share;
+    }
+
+    /**
+     * @param $coaches
+     * @return array
+     */
+    private function getOldShare($coaches)
+    {
+        $share = [];
+        for($i=0; $i<count($coaches); $i++){
+
+            $coachId = $coaches[$i]['id'];
+            $result = $this->db->connection
+                ->query("select count(*) from `coaches_students` where `coach_id` = $coachId");
+
+            $share[$i]['old_share'] =  $result->fetchColumn();
+            $share[$i]['coach_id'] =  $coaches[$i]['id'];
+        }
         return $share;
     }
 
