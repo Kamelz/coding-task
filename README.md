@@ -3,7 +3,7 @@
 ## Requirements
     - git
     
-    - PHP <= 5.6
+    - PHP >= 5.6
     
     - composer -> https://getcomposer.org/
     
