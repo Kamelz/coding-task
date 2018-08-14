@@ -1,13 +1,13 @@
-#Coding Task
+# Coding Task
 
-##Requirements
+## Requirements
     - git
     
     - PHP <= 5.6
     
     - composer -> https://getcomposer.org/
     
-##Setup and run
+## Setup and run
     - git clone https://github.com/Kamelz/coding-task.git
     
     - composer install
