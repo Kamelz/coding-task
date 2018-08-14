@@ -1,11 +1,12 @@
-#coaches
+# coaches
 - id
 - name
 - capacity
-#students
+
+# students
 - id
 - name
 
-#coaches_students
+# coaches_students
 - coach_id
 - student_id
